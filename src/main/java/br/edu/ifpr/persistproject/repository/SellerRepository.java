@@ -1,6 +1,7 @@
 package br.edu.ifpr.persistproject.repository;
 
 import br.edu.ifpr.persistproject.connection.ConnectionFactory;
+import br.edu.ifpr.persistproject.exception.DatabaseIntegrityException;
 import br.edu.ifpr.persistproject.model.Seller;
 
 import java.sql.*;
@@ -89,9 +90,7 @@ public class SellerRepository {
 
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(e);
-
+            throw new DatabaseIntegrityException(e.getMessage());
         } finally {
 
             //close resources to avoid memory overflow
@@ -103,5 +102,6 @@ public class SellerRepository {
         return seller;
 
     }
+
 
 }
