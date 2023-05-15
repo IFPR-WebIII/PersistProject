@@ -14,7 +14,7 @@ public class ConnectionTest {
 
     public static void main(String[] args) {
 
-        //teste
+        //teste 2
 
         SellerRepository repository = new SellerRepository();
 
