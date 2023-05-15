@@ -5,6 +5,7 @@ import br.edu.ifpr.persistproject.exception.DatabaseIntegrityException;
 import br.edu.ifpr.persistproject.model.Seller;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,9 @@ public class SellerRepository {
     public Seller insert(Seller seller){
 
         //SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        java.sql.Date date = Date.valueOf(seller.getBirthDate());
+
 
         PreparedStatement statement = null;
 
