@@ -9,18 +9,20 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SellerRepository {
 
     private Connection conn;
 
     public SellerRepository(){
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        conn = connectionFactory.getConnection();
+        /* Obtem uma nova instância de Connection*/
+        conn = ConnectionFactory.getConnection();
     }
 
-    public List<Seller> getSellers(){
+    public List<Seller> getAll(){
 
         List<Seller> sellers = new ArrayList<>();
 
@@ -186,6 +188,7 @@ public class SellerRepository {
 
     }
 
+
     public List<Seller> findByDepartment(Department department){
 
         List<Seller> sellersList = new ArrayList<>();
@@ -206,9 +209,22 @@ public class SellerRepository {
 
             resultSet = statement.executeQuery();
 
+            /*
+             * O algoritmo usando Map, tem como objetivo garantir que não existe mais de uma instância
+             * para o mesmo department em memória. Embora ingênua, essa solução funciona satisfatóriamente.
+             * O mais importante é saber que esses problemas existes no processo de mapeamento do paradigma
+             * Relacional para o paradigma Orientado a Objetos.*/
+            Map<Integer, Department> map = new HashMap<>();
+
             while(resultSet.next()){
 
-                Department dep = instantiateDepartment(resultSet);
+                Department dep = map.get(resultSet.getInt("DepartmentId"));
+
+                if(dep == null){
+                    dep = instantiateDepartment(resultSet);
+                    map.put(dep.getId(), dep);
+                }
+
                 Seller seller = instantiateSeller(resultSet, dep);
 
                 sellersList.add(seller);
@@ -225,6 +241,8 @@ public class SellerRepository {
 
     }
 
+    /* Uma vez que criar objetos dessa forma é oneroso, uma estratégia é criar
+     * um método para realiar essa operação */
     public Seller instantiateSeller(ResultSet resultSet, Department department) throws SQLException {
         Seller seller = new Seller();
         seller.setId(resultSet.getInt("id"));
