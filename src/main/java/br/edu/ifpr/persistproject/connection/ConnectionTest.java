@@ -1,5 +1,6 @@
 package br.edu.ifpr.persistproject.connection;
 
+import br.edu.ifpr.persistproject.model.Department;
 import br.edu.ifpr.persistproject.model.Seller;
 import br.edu.ifpr.persistproject.repository.SellerRepository;
 
@@ -16,19 +17,14 @@ public class ConnectionTest {
 
         SellerRepository repository = new SellerRepository();
 
-        Seller seller = new Seller();
-        seller.setName("Maria");
+        Department department = new Department();
+        department.setId(2);
 
-        //default, ISO_LOCAL_DATE
-        //if the date is not in ISO 8601 format, it must be formatted
-        seller.setBirthDate(LocalDate.parse("2016-08-16"));
-        seller.setBaseSalary(5000.0);
+        List<Seller> sellers = repository.findByDepartment(department);
 
-        repository.insert(seller);
+        for(Seller s: sellers){
+            System.out.println(s);
+        }
 
-        List<Seller> sellers = repository.getSellers();
-
-        sellers.forEach( s -> System.out.println(s) );
-        
     }
 }
